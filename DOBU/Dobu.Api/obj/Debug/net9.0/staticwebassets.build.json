@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "MksldpIw5owfN5ichpj878zU8Z2so2yIlGiuSxMkyMU=",
+  "Source": "Dobu.Api",
+  "BasePath": "_content/Dobu.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
