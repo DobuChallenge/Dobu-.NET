@@ -181,32 +181,32 @@ Pela interface é possível visualizar os endpoints, conferir parâmetros e test
 
 ---
 
-## Principais Rotas
+## Documentação das Rotas
 
-### Usuários
-
-| Método | Rota |
-| --- | --- |
-| GET | `/api/usuarios` |
-| GET | `/api/usuarios/{id}` |
-| GET | `/api/usuarios/tipo/{tipoUsuario}` |
-| GET | `/api/usuarios/email/{email}` |
-| POST | `/api/usuarios` |
-| PUT | `/api/usuarios/{id}` |
-| DELETE | `/api/usuarios/{id}` |
-
-### Pets
+### Agendamentos
 
 | Método | Rota |
 | --- | --- |
-| GET | `/api/pets` |
-| GET | `/api/pets/{id}` |
-| GET | `/api/pets/responsavel/{responsavelId}` |
-| GET | `/api/pets/raca/{racaId}` |
-| GET | `/api/pets/nome/{nome}` |
-| POST | `/api/pets` |
-| PUT | `/api/pets/{id}` |
-| DELETE | `/api/pets/{id}` |
+| GET | `/api/agendamentos` |
+| GET | `/api/agendamentos/{id}` |
+| GET | `/api/agendamentos/pet/{petId}` |
+| GET | `/api/agendamentos/veterinario/{veterinarioId}` |
+| GET | `/api/agendamentos/status/{status}` |
+| POST | `/api/agendamentos` |
+| PUT | `/api/agendamentos/{id}` |
+| DELETE | `/api/agendamentos/{id}` |
+
+### Análises IA
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/analises-ia` |
+| GET | `/api/analises-ia/{id}` |
+| GET | `/api/analises-ia/prontuario/{prontuarioId}` |
+| GET | `/api/analises-ia/risco/{risco}` |
+| POST | `/api/analises-ia` |
+| PUT | `/api/analises-ia/{id}` |
+| DELETE | `/api/analises-ia/{id}` |
 
 ### Consultas
 
@@ -221,20 +221,124 @@ Pela interface é possível visualizar os endpoints, conferir parâmetros e test
 | PUT | `/api/consultas/{id}` |
 | DELETE | `/api/consultas/{id}` |
 
-### Outras Rotas CRUD
+### DobuCams
 
-Também existem controllers REST para:
+| Método | Rota |
+| --- | --- |
+| GET | `/api/dobucams` |
+| GET | `/api/dobucams/{id}` |
+| GET | `/api/dobucams/pet/{petId}` |
+| GET | `/api/dobucams/status/{statusCamera}` |
+| POST | `/api/dobucams` |
+| PUT | `/api/dobucams/{id}` |
+| DELETE | `/api/dobucams/{id}` |
 
-- `/api/agendamentos`
-- `/api/analises-ia`
-- `/api/dobucams`
-- `/api/especies`
-- `/api/lembretes`
-- `/api/logs-erro`
-- `/api/pagamentos`
-- `/api/prontuarios`
-- `/api/racas`
-- `/api/vacinas`
+### Espécies
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/especies` |
+| GET | `/api/especies/{id}` |
+| GET | `/api/especies/nome/{nome}` |
+| POST | `/api/especies` |
+| PUT | `/api/especies/{id}` |
+| DELETE | `/api/especies/{id}` |
+
+### Lembretes
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/lembretes` |
+| GET | `/api/lembretes/{id}` |
+| GET | `/api/lembretes/pet/{petId}` |
+| GET | `/api/lembretes/status/{status}` |
+| POST | `/api/lembretes` |
+| PUT | `/api/lembretes/{id}` |
+| DELETE | `/api/lembretes/{id}` |
+
+### Logs de Erro
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/logs-erro` |
+| GET | `/api/logs-erro/{id}` |
+| GET | `/api/logs-erro/usuario/{usuarioId}` |
+| GET | `/api/logs-erro/procedure/{nomeProcedure}` |
+| POST | `/api/logs-erro` |
+| PUT | `/api/logs-erro/{id}` |
+| DELETE | `/api/logs-erro/{id}` |
+
+### Pagamentos
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/pagamentos` |
+| GET | `/api/pagamentos/{id}` |
+| GET | `/api/pagamentos/consulta/{consultaId}` |
+| GET | `/api/pagamentos/forma/{formaPagamento}` |
+| POST | `/api/pagamentos` |
+| PUT | `/api/pagamentos/{id}` |
+| DELETE | `/api/pagamentos/{id}` |
+
+### Pets
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/pets` |
+| GET | `/api/pets/{id}` |
+| GET | `/api/pets/responsavel/{responsavelId}` |
+| GET | `/api/pets/raca/{racaId}` |
+| GET | `/api/pets/nome/{nome}` |
+| POST | `/api/pets` |
+| PUT | `/api/pets/{id}` |
+| DELETE | `/api/pets/{id}` |
+
+### Prontuários
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/prontuarios` |
+| GET | `/api/prontuarios/{id}` |
+| GET | `/api/prontuarios/consulta/{consultaId}` |
+| POST | `/api/prontuarios` |
+| PUT | `/api/prontuarios/{id}` |
+| DELETE | `/api/prontuarios/{id}` |
+
+### Raças
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/racas` |
+| GET | `/api/racas/{id}` |
+| GET | `/api/racas/especie/{especieId}` |
+| GET | `/api/racas/porte/{porte}` |
+| POST | `/api/racas` |
+| PUT | `/api/racas/{id}` |
+| DELETE | `/api/racas/{id}` |
+
+### Usuários
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/usuarios` |
+| GET | `/api/usuarios/{id}` |
+| GET | `/api/usuarios/tipo/{tipoUsuario}` |
+| GET | `/api/usuarios/email/{email}` |
+| POST | `/api/usuarios` |
+| PUT | `/api/usuarios/{id}` |
+| DELETE | `/api/usuarios/{id}` |
+
+### Vacinas
+
+| Método | Rota |
+| --- | --- |
+| GET | `/api/vacinas` |
+| GET | `/api/vacinas/{id}` |
+| GET | `/api/vacinas/pet/{petId}` |
+| GET | `/api/vacinas/proxima-dose?ate=2026-05-31` |
+| POST | `/api/vacinas` |
+| PUT | `/api/vacinas/{id}` |
+| DELETE | `/api/vacinas/{id}` |
 
 ---
 
