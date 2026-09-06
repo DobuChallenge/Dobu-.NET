@@ -18,6 +18,7 @@ public class Pet : BaseEntity
     public List<Vacina> Vacinas { get; private set; } = new();
     public List<Lembrete> Lembretes { get; private set; } = new();
     public List<DobuCam> DobuCams { get; private set; } = new();
+    public List<InformacaoCuidado> InformacoesCuidado { get; private set; } = new();
 
     private Pet()
     {

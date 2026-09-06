@@ -36,3 +36,4 @@ C:\DOBU-.NET\DOBU\Dobu.Infrastructure\obj\Debug\net9.0\refint\Dobu.Infrastructur
 C:\DOBU-.NET\DOBU\Dobu.Infrastructure\obj\Debug\net9.0\Dobu.Infrastructure.pdb
 C:\DOBU-.NET\DOBU\Dobu.Infrastructure\obj\Debug\net9.0\Dobu.Infrastructure.genruntimeconfig.cache
 C:\DOBU-.NET\DOBU\Dobu.Infrastructure\obj\Debug\net9.0\ref\Dobu.Infrastructure.dll
+C:\Dobu-.NET\DOBU\Dobu.Infrastructure\obj\Debug\net9.0\Dobu.Infrastructure.sourcelink.json

@@ -225,6 +225,44 @@ namespace Dobu.Infrastructure.Migrations
                     b.ToTable("ESPECIE", (string)null);
                 });
 
+            modelBuilder.Entity("Dobu.Domain.Entities.InformacaoCuidado", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("RAW(16)")
+                        .HasColumnName("ID_INFORMACAO_CUIDADO_PK");
+
+                    b.Property<int>("Active")
+                        .HasColumnType("NUMBER(1)")
+                        .HasColumnName("ACTIVE");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)")
+                        .HasColumnName("DESCRICAO");
+
+                    b.Property<Guid>("PetId")
+                        .HasColumnType("RAW(16)")
+                        .HasColumnName("ID_PET_FK");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("NVARCHAR2(120)")
+                        .HasColumnName("TITULO");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetId");
+
+                    b.ToTable("INFORMACAO_CUIDADO", (string)null);
+                });
+
             modelBuilder.Entity("Dobu.Domain.Entities.Lembrete", b =>
                 {
                     b.Property<Guid>("Id")
@@ -632,6 +670,17 @@ namespace Dobu.Infrastructure.Migrations
                     b.Navigation("Pet");
                 });
 
+            modelBuilder.Entity("Dobu.Domain.Entities.InformacaoCuidado", b =>
+                {
+                    b.HasOne("Dobu.Domain.Entities.Pet", "Pet")
+                        .WithMany("InformacoesCuidado")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pet");
+                });
+
             modelBuilder.Entity("Dobu.Domain.Entities.Lembrete", b =>
                 {
                     b.HasOne("Dobu.Domain.Entities.Pet", "Pet")
@@ -736,6 +785,8 @@ namespace Dobu.Infrastructure.Migrations
                     b.Navigation("Consultas");
 
                     b.Navigation("DobuCams");
+
+                    b.Navigation("InformacoesCuidado");
 
                     b.Navigation("Lembretes");
 

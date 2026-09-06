@@ -1,4 +1,4 @@
-# Sprint 1 Challenge | DOBU
+# Sprint 3 Challenge | DOBU
 
 ## Integrantes do Grupo
 
@@ -22,7 +22,7 @@ Repositório: <https://github.com/DobuChallenge/Dobu-.NET>
 
 ## Objetivo desta Entrega
 
-Esta entrega corresponde à Sprint 1 de Advanced Business Development with .NET do Challenge, com foco em:
+Esta entrega corresponde à Sprint 3 de Advanced Business Development with .NET do Challenge, com foco em:
 
 - API RESTful com ASP.NET Core Web API
 - CRUD completo
@@ -35,6 +35,11 @@ Esta entrega corresponde à Sprint 1 de Advanced Business Development with .NET 
 - contratos e implementações de repositories
 - injeção de dependência
 - documentação com Swagger/OpenAPI
+- monitoramento com Health Checks
+- logging estruturado e correlação de requisições
+- distributed tracing e métricas com OpenTelemetry
+- testes unitários e de integração automatizados
+- cobertura de testes e organização por camadas
 
 ---
 
@@ -46,6 +51,9 @@ Esta entrega corresponde à Sprint 1 de Advanced Business Development with .NET 
 - Oracle Entity Framework Core Provider
 - Oracle Database
 - Swagger / OpenAPI
+- Serilog
+- OpenTelemetry e Prometheus
+- xUnit, Moq e WebApplicationFactory
 
 ---
 
@@ -382,37 +390,186 @@ As evidências complementares ficam na pasta `/docs`, incluindo:
 
 ---
 
-## Como Executar o Projeto
+---
 
-1. Restaurar os pacotes:
+## Monitoramento, Observabilidade e Testes
 
-```bash
-dotnet restore DOBU/Dobu.sln
+A aplicação foi evoluída para a Sprint 3 com os seguintes recursos:
+
+- Health Checks da API, do banco Oracle e de serviço externo.
+- Logging estruturado com Serilog nos níveis Information, Warning e Error.
+- Correlation ID por requisição usando o header `X-Correlation-ID`.
+- Distributed tracing e métricas com OpenTelemetry.
+- Endpoint de métricas no formato Prometheus.
+- Testes unitários com xUnit, Moq e padrão AAA.
+- Testes de integração HTTP com `WebApplicationFactory`.
+- Fixtures e Collection Fixture para compartilhar o contexto dos testes.
+
+### Health Checks
+
+- `GET /health`: verifica se a API está respondendo.
+- `GET /health/ready`: verifica o banco Oracle e o serviço externo.
+- `GET /metrics`: expõe métricas de requisições, duração e erros.
+
+O endpoint `/health/ready` retorna HTTP `200` quando as dependências estão saudáveis e HTTP `503` quando alguma dependência está indisponível.
+
+O serviço externo é configurado pela variável `Observability:ExternalServiceUrl`. Por padrão, o projeto utiliza `https://example.com`.
+
+### Logs e correlação
+
+Os logs são enviados para o console e para:
+
+```text
+DOBU/Dobu.Api/logs/dobu-YYYYMMDD.log
 ```
 
-2. Compilar a solução:
+Cada requisição recebe um identificador de correlação. Se o cliente enviar `X-Correlation-ID`, o mesmo valor será devolvido na resposta e aparecerá nos logs.
 
-```bash
+### Testes automatizados
+
+Os testes estão separados em:
+
+- `DOBU/tests/Dobu.UnitTests`: testes de domínio e aplicação.
+- `DOBU/tests/Dobu.IntegrationTests`: testes HTTP com a API executando em memória.
+
+Os testes seguem o padrão AAA:
+
+1. Arrange: preparação dos dados e dependências.
+2. Act: execução do método ou requisição.
+3. Assert: validação do resultado esperado.
+
+---
+
+## Como Executar o Projeto
+
+### Pré-requisitos
+
+- .NET SDK 9 instalado.
+- Acesso de rede ao Oracle da FIAP.
+- JetBrains Rider, Visual Studio ou VS Code com suporte a .NET.
+- Credenciais do Oracle configuradas localmente.
+
+Para conferir o SDK:
+
+```powershell
+dotnet --version
+```
+
+Abra a solution `DOBU/Dobu.sln`. O Rider é recomendado para projetos .NET;
+
+### Configuração do Oracle
+
+Crie um arquivo `.env` na raiz do projeto. Ele é local e não deve ser commitado:
+
+```text
+ASPNETCORE_ENVIRONMENT=Development
+Database__Provider=Oracle
+ConnectionStrings__DobuOracle=User Id=SEU_USUARIO;Password=SUA_SENHA;Data Source=oracle.fiap.com.br:1521/orcl
+```
+
+O arquivo `.env` já está incluído no `.gitignore`. Nunca publique usuário ou senha no README ou no repositório.
+
+O ASP.NET Core não carrega `.env` automaticamente. Execute este bloco no PowerShell. Ele funciona mesmo se o terminal estiver dentro de `DOBU` e localiza o `.env` na raiz do repositório:
+
+```powershell
+$repoRoot = (git rev-parse --show-toplevel).Trim()
+Set-Location -LiteralPath $repoRoot
+
+$envFile = Join-Path $repoRoot ".env"
+$envLines = Get-Content -LiteralPath $envFile
+foreach ($line in $envLines) {
+  if ($line -and $line -notmatch '^\s*#') {
+    $name, $value = $line -split '=', 2
+    Set-Item -Path "Env:$name" -Value $value
+  }
+}
+```
+
+### Restaurar e compilar
+
+Execute na raiz do repositório:
+
+```powershell
+dotnet restore DOBU/Dobu.sln
 dotnet build DOBU/Dobu.sln
 ```
 
-3. Aplicar a migration no banco:
+### Aplicar as migrations no Oracle
 
-```bash
-dotnet ef database update --project DOBU/Dobu.Infrastructure --startup-project DOBU/Dobu.Api
+Caso ainda não tenha o Entity Framework CLI:
+
+```powershell
+dotnet tool install --global dotnet-ef
 ```
 
-4. Executar a API:
+Aplique as migrations:
 
-```bash
-dotnet run --project DOBU/Dobu.Api
+```powershell
+dotnet ef database update `
+  --project DOBU/Dobu.Infrastructure `
+  --startup-project DOBU/Dobu.Api `
+  --context DobuDbContext
 ```
 
-5. Abrir o Swagger:
+As migrations atuais incluem `InitialDobu` e `Sprint3Oracle`.
 
-```text
-http://localhost:5070/swagger
+Para criar uma nova migration:
+
+```powershell
+dotnet ef migrations add NomeDaMigration `
+  --project DOBU/Dobu.Infrastructure `
+  --startup-project DOBU/Dobu.Api `
+  --context DobuDbContext
 ```
+
+### Executar os testes
+
+Os testes usam SQLite isolado e não alteram o banco Oracle:
+
+```powershell
+dotnet test DOBU/Dobu.sln
+```
+
+Para gerar cobertura:
+
+```powershell
+dotnet test DOBU/Dobu.sln --collect:"XPlat Code Coverage"
+```
+
+### Iniciar a API
+
+Na mesma janela do PowerShell em que o `.env` foi carregado:
+
+```powershell
+dotnet run --project DOBU/Dobu.Api --launch-profile http
+```
+
+Para parar a API, pressione `Ctrl+C`.
+
+### Validar a execução
+
+Com a API em execução, acesse:
+
+- Swagger: `http://localhost:5070/swagger`
+- Health básico: `http://localhost:5070/health`
+- Health das dependências: `http://localhost:5070/health/ready`
+- Métricas Prometheus: `http://localhost:5070/metrics`
+
+Fluxo recomendado:
+
+1. Execute `/health` e confirme HTTP `200`.
+2. Execute `/health/ready` e confirme que `database` e `external-service` estão `Healthy`.
+3. Execute `/metrics` e confirme o conteúdo Prometheus.
+4. Use o Swagger para testar cadastro, login e endpoints protegidos.
+
+### Autenticação
+
+1. Faça `POST /api/auth/register` com `{ "nome", "email", "senha", "tipoUsuario" }`.
+2. Faça `POST /api/auth/login` com `{ "email", "senha" }`.
+3. Envie o token nos endpoints protegidos usando `Authorization: Bearer <token>`.
+
+Perfis aceitos: `Responsavel` e `Veterinario`.
+
 
 ---
 

@@ -1,4 +1,5 @@
 using Dobu.Application.Interfaces.Repositories;
+using Dobu.Application.Services;
 using Dobu.Infrastructure.Persistence;
 using Dobu.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,18 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<DobuDbContext>(options =>
-            options.UseOracle(configuration.GetConnectionString("DobuOracle")));
+        var provider = configuration["Database:Provider"] ?? "Sqlite";
+        var sqliteConn = configuration.GetConnectionString("DobuSqlite") ?? "Data Source=dobu.db";
+        if (provider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddDbContext<DobuDbContext>(options =>
+                options.UseSqlite(sqliteConn));
+        }
+        else
+        {
+            services.AddDbContext<DobuDbContext>(options =>
+                options.UseOracle(configuration.GetConnectionString("DobuOracle")));
+        }
 
         services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
         services.AddScoped<IAnaliseIaRepository, AnaliseIaRepository>();
@@ -26,6 +37,7 @@ public static class DependencyInjection
         services.AddScoped<IProntuarioRepository, ProntuarioRepository>();
         services.AddScoped<IRacaRepository, RacaRepository>();
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        services.AddScoped<IUserStore, UserStore>();
         services.AddScoped<IVacinaRepository, VacinaRepository>();
 
         return services;

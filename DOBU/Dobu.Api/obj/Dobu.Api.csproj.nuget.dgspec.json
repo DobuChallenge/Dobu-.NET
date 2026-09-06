@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\DOBU-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj": {}
+    "C:\\Dobu-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj": {}
   },
   "projects": {
-    "C:\\DOBU-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj": {
+    "C:\\Dobu-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\DOBU-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj",
+        "projectUniqueName": "C:\\Dobu-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj",
         "projectName": "Dobu.Api",
-        "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj",
+        "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Api\\Dobu.Api.csproj",
         "packagesPath": "C:\\Users\\yumizxs\\.nuget\\packages\\",
-        "outputPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Api\\obj\\",
+        "outputPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yumizxs\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -26,8 +26,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\DOBU-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj": {
-                "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj"
+              "C:\\Dobu-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj": {
+                "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj"
               }
             }
           }
@@ -48,6 +48,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -57,6 +61,38 @@
             "Microsoft.EntityFrameworkCore.Relational": {
               "target": "Package",
               "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "OpenTelemetry.Exporter.Prometheus.AspNetCore": {
+              "target": "Package",
+              "version": "[1.10.0-beta.1, )"
+            },
+            "OpenTelemetry.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[1.10.0, )"
+            },
+            "OpenTelemetry.Instrumentation.AspNetCore": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "OpenTelemetry.Instrumentation.Http": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[6.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -86,14 +122,14 @@
         }
       }
     },
-    "C:\\DOBU-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj": {
+    "C:\\Dobu-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\DOBU-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj",
+        "projectUniqueName": "C:\\Dobu-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj",
         "projectName": "Dobu.Application",
-        "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj",
+        "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj",
         "packagesPath": "C:\\Users\\yumizxs\\.nuget\\packages\\",
-        "outputPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Application\\obj\\",
+        "outputPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yumizxs\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -108,8 +144,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
-                "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj"
+              "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
+                "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj"
               }
             }
           }
@@ -129,6 +165,16 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Extensions.Identity.Core": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.3.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -149,14 +195,14 @@
         }
       }
     },
-    "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
+    "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
+        "projectUniqueName": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
         "projectName": "Dobu.Domain",
-        "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
+        "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
         "packagesPath": "C:\\Users\\yumizxs\\.nuget\\packages\\",
-        "outputPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\obj\\",
+        "outputPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yumizxs\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -208,14 +254,14 @@
         }
       }
     },
-    "C:\\DOBU-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj": {
+    "C:\\Dobu-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\DOBU-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Dobu-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj",
         "projectName": "Dobu.Infrastructure",
-        "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj",
+        "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Infrastructure\\Dobu.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\yumizxs\\.nuget\\packages\\",
-        "outputPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Infrastructure\\obj\\",
+        "outputPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yumizxs\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -230,11 +276,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\DOBU-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj": {
-                "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj"
+              "C:\\Dobu-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj": {
+                "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Application\\Dobu.Application.csproj"
               },
-              "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
-                "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj"
+              "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
+                "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj"
               }
             }
           }
@@ -266,6 +312,10 @@
               "version": "[9.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Relational": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[9.0.0, )"
             },

@@ -215,6 +215,21 @@ public class LogErroConfiguration : IEntityTypeConfiguration<LogErro>
     }
 }
 
+public class InformacaoCuidadoConfiguration : IEntityTypeConfiguration<InformacaoCuidado>
+{
+    public void Configure(EntityTypeBuilder<InformacaoCuidado> builder)
+    {
+        builder.ToTable("INFORMACAO_CUIDADO");
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).HasColumnName("ID_INFORMACAO_CUIDADO_PK");
+        builder.Property(x => x.Titulo).HasColumnName("TITULO").HasMaxLength(120).IsRequired();
+        builder.Property(x => x.Descricao).HasColumnName("DESCRICAO").HasMaxLength(1000).IsRequired();
+        builder.Property(x => x.PetId).HasColumnName("ID_PET_FK");
+        builder.HasOne(x => x.Pet).WithMany(x => x.InformacoesCuidado).HasForeignKey(x => x.PetId).OnDelete(DeleteBehavior.Cascade);
+        BaseEntityConfiguration.Configure(builder);
+    }
+}
+
 internal static class BaseEntityConfiguration
 {
     public static void Configure<T>(EntityTypeBuilder<T> builder) where T : BaseEntity

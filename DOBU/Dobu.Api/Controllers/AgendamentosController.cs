@@ -1,6 +1,7 @@
 using Dobu.Domain.Entities;
 using Dobu.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dobu.Api.Controllers;
@@ -8,6 +9,7 @@ namespace Dobu.Api.Controllers;
 [Produces("application/json")]
 [ApiController]
 [Route("api/agendamentos")]
+[Authorize]
 public class AgendamentosController(DobuDbContext context) : ControllerBase
 {
     [HttpGet]

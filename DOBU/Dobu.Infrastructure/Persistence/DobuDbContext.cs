@@ -18,6 +18,7 @@ public class DobuDbContext(DbContextOptions<DobuDbContext> options) : DbContext(
     public DbSet<DobuCam> DobuCams { get; set; }
     public DbSet<AnaliseIa> AnalisesIa { get; set; }
     public DbSet<LogErro> LogsErro { get; set; }
+    public DbSet<InformacaoCuidado> InformacoesCuidado { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

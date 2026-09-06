@@ -1,12 +1,14 @@
 using Dobu.Domain.Entities;
 using Dobu.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dobu.Api.Controllers;
 
 [ApiController]
 [Route("api/pets")]
+[Authorize]
 public class PetsController(DobuDbContext context) : ControllerBase
 {
     [HttpGet]

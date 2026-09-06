@@ -20,3 +20,4 @@ C:\DOBU-.NET\DOBU\Dobu.Domain\obj\Debug\net9.0\Dobu.Domain.dll
 C:\DOBU-.NET\DOBU\Dobu.Domain\obj\Debug\net9.0\refint\Dobu.Domain.dll
 C:\DOBU-.NET\DOBU\Dobu.Domain\obj\Debug\net9.0\Dobu.Domain.pdb
 C:\DOBU-.NET\DOBU\Dobu.Domain\obj\Debug\net9.0\ref\Dobu.Domain.dll
+C:\Dobu-.NET\DOBU\Dobu.Domain\obj\Debug\net9.0\Dobu.Domain.sourcelink.json

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {}
+    "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {}
   },
   "projects": {
-    "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
+    "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
+        "projectUniqueName": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
         "projectName": "Dobu.Domain",
-        "projectPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
+        "projectPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\Dobu.Domain.csproj",
         "packagesPath": "C:\\Users\\yumizxs\\.nuget\\packages\\",
-        "outputPath": "C:\\DOBU-.NET\\DOBU\\Dobu.Domain\\obj\\",
+        "outputPath": "C:\\Dobu-.NET\\DOBU\\Dobu.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yumizxs\\AppData\\Roaming\\NuGet\\NuGet.Config"

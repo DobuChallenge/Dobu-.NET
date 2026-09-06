@@ -28,3 +28,4 @@ C:\DOBU-.NET\DOBU\Dobu.Application\obj\Debug\net9.0\Dobu.Application.dll
 C:\DOBU-.NET\DOBU\Dobu.Application\obj\Debug\net9.0\refint\Dobu.Application.dll
 C:\DOBU-.NET\DOBU\Dobu.Application\obj\Debug\net9.0\Dobu.Application.pdb
 C:\DOBU-.NET\DOBU\Dobu.Application\obj\Debug\net9.0\ref\Dobu.Application.dll
+C:\Dobu-.NET\DOBU\Dobu.Application\obj\Debug\net9.0\Dobu.Application.sourcelink.json

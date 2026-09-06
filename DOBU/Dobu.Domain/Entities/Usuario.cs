@@ -1,5 +1,6 @@
 using Dobu.Domain.Commons;
 using Dobu.Domain.Enums;
+using System.Text.Json.Serialization;
 
 namespace Dobu.Domain.Entities;
 
@@ -7,6 +8,7 @@ public class Usuario : BaseEntity
 {
     public string Nome { get; private set; } = string.Empty;
     public string Email { get; private set; } = string.Empty;
+    [JsonIgnore]
     public string Senha { get; private set; } = string.Empty;
     public string TipoUsuario { get; private set; } = string.Empty;
 
@@ -42,5 +44,13 @@ public class Usuario : BaseEntity
         Email = email;
         Senha = senha;
         TipoUsuario = tipoUsuarioValido.ToString().ToUpperInvariant();
+    }
+
+    public void DefinirSenha(string senhaHash)
+    {
+        if (string.IsNullOrWhiteSpace(senhaHash))
+            throw new ArgumentException("Hash de senha inválido");
+
+        Senha = senhaHash;
     }
 }
