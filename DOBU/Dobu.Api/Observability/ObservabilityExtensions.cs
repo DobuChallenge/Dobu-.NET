@@ -12,7 +12,7 @@ public static class ObservabilityExtensions
     {
         services.AddOpenTelemetry()
             .ConfigureResource(resource => resource.AddService("Dobu.Api"))
-            .WithTracing(tracing => tracing.AddSource("Dobu.Application").AddAspNetCoreInstrumentation().AddHttpClientInstrumentation())
+            .WithTracing(tracing => tracing.AddSource("Dobu.Application").AddAspNetCoreInstrumentation().AddHttpClientInstrumentation().AddConsoleExporter())
             .WithMetrics(metrics => metrics.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation().AddMeter(ObservabilityExtensions.MeterName).AddPrometheusExporter());
         return services;
     }

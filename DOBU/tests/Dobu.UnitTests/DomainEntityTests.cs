@@ -18,6 +18,18 @@ public class DomainEntityTests
     }
 
     [Fact]
+    public void Usuario_TipoUsuarioNumerico_LancaArgumentException()
+    {
+        // Arrange
+
+        // Act
+        var action = () => new Usuario("Ana", "ana@dobu.com", "Senha123", "1");
+
+        // Assert
+        Assert.Throws<ArgumentException>(action);
+    }
+
+    [Fact]
     public void Pet_IdadeNegativa_LancaArgumentException()
     {
         // Arrange

@@ -13,7 +13,22 @@ public sealed class RequestMetricsMiddleware(RequestDelegate next)
     public async Task InvokeAsync(HttpContext context)
     {
         var start = Stopwatch.GetTimestamp();
-        await next(context);
+        try
+        {
+            await next(context);
+        }
+        catch
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            Record(context, start);
+            throw;
+        }
+
+        Record(context, start);
+    }
+
+    private static void Record(HttpContext context, long start)
+    {
         var elapsed = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
         Duration.Record(elapsed, new KeyValuePair<string, object?>("http.status_code", context.Response.StatusCode));
         if (context.Response.StatusCode >= StatusCodes.Status400BadRequest)

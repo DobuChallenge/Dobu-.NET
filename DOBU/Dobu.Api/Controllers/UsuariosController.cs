@@ -1,7 +1,10 @@
 using Dobu.Domain.Entities;
 using Dobu.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Dobu.Api.Controllers;
 
@@ -9,6 +12,8 @@ namespace Dobu.Api.Controllers;
 [Route("api/usuarios")]
 public class UsuariosController(DobuDbContext context) : ControllerBase
 {
+    private readonly PasswordHasher<Usuario> _hasher = new();
+
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Usuario>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Usuario>>> GetAll()
@@ -48,12 +53,14 @@ public class UsuariosController(DobuDbContext context) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Usuario>> Create(UsuarioRequest request)
     {
-        if (await context.Usuarios.CountAsync(x => x.Email == request.Email) > 0)
+        var email = request.Email.Trim().ToLowerInvariant();
+        if (await context.Usuarios.CountAsync(x => x.Email == email) > 0)
             return BadRequest("Ja existe usuario cadastrado com esse email.");
 
         try
         {
-            var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.TipoUsuario.ToUpper());
+            var usuario = new Usuario(request.Nome, email, request.Senha, request.TipoUsuario);
+            usuario.DefinirSenha(_hasher.HashPassword(usuario, request.Senha));
             context.Usuarios.Add(usuario);
             await context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = usuario.Id }, usuario);
@@ -65,18 +72,25 @@ public class UsuariosController(DobuDbContext context) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize]
     [ProducesResponseType(typeof(Usuario), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Usuario>> Update(Guid id, UsuarioRequest request)
     {
+        if (!UsuarioAutenticadoEhDono(id))
+            return Forbid();
+
         var usuario = await context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);
         if (usuario is null)
             return NotFound();
 
         try
         {
-            usuario.Atualizar(request.Nome, request.Email, request.Senha, request.TipoUsuario.ToUpper());
+            var email = request.Email.Trim().ToLowerInvariant();
+            usuario.Atualizar(request.Nome, email, request.Senha, request.TipoUsuario);
+            usuario.DefinirSenha(_hasher.HashPassword(usuario, request.Senha));
             await context.SaveChangesAsync();
             return Ok(usuario);
         }
@@ -87,10 +101,15 @@ public class UsuariosController(DobuDbContext context) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)
     {
+        if (!UsuarioAutenticadoEhDono(id))
+            return Forbid();
+
         var usuario = await context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);
         if (usuario is null)
             return NotFound();
@@ -98,6 +117,12 @@ public class UsuariosController(DobuDbContext context) : ControllerBase
         context.Usuarios.Remove(usuario);
         await context.SaveChangesAsync();
         return NoContent();
+    }
+
+    private bool UsuarioAutenticadoEhDono(Guid id)
+    {
+        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Guid.TryParse(claim, out var usuarioId) && usuarioId == id;
     }
 }
 

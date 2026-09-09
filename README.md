@@ -159,19 +159,19 @@ Na Infrastructure são registrados o `DobuDbContext` com Oracle e todos os repos
 
 ---
 
-## Connection String
+## Configuração Segura
 
-A connection string deve ser configurada em `DOBU/Dobu.Api/appsettings.Development.json`.
+O `appsettings.json` não contém senha, chave JWT ou connection string fixa. Em produção, configure esses valores nas configurações seguras do Azure App Service:
 
-Exemplo seguro:
-
-```json
-{
-  "ConnectionStrings": {
-    "DobuOracle": "Data Source=oracle.fiap.com.br:1521/orcl;User ID=<USUARIO>;Password=<SENHA>;"
-  }
-}
+```text
+ASPNETCORE_ENVIRONMENT=Production
+Database__Provider=Oracle
+ConnectionStrings__DobuOracle=User Id=SEU_USUARIO;Password=SUA_SENHA;Data Source=oracle.fiap.com.br:1521/orcl
+Jwt__Key=CHAVE_COM_PELO_MENOS_32_CARACTERES
+Observability__ExternalServiceUrl=https://servico-externo/health
 ```
+
+Para desenvolvimento local, o projeto usa SQLite pelo `appsettings.Development.json`.
 
 ---
 
@@ -396,34 +396,37 @@ As evidências complementares ficam na pasta `/docs`, incluindo:
 
 A aplicação foi evoluída para a Sprint 3 com os seguintes recursos:
 
-- Health Checks da API, do banco Oracle e de serviço externo.
-- Logging estruturado com Serilog nos níveis Information, Warning e Error.
+- Health Checks da API, do banco configurado e de serviço externo.
+- Logging estruturado com Serilog nos níveis Information, Warning e Error, com saída para console e arquivo.
 - Correlation ID por requisição usando o header `X-Correlation-ID`.
-- Distributed tracing e métricas com OpenTelemetry.
+- Distributed tracing com OpenTelemetry entre API, HTTP client e camada de aplicação.
 - Endpoint de métricas no formato Prometheus.
 - Testes unitários com xUnit, Moq e padrão AAA.
 - Testes de integração HTTP com `WebApplicationFactory`.
+- Teste de integração do CRUD principal com fluxo `POST -> GET -> PUT -> DELETE`.
 - Fixtures e Collection Fixture para compartilhar o contexto dos testes.
+- Swagger configurado com autenticação JWT Bearer.
+- Senhas armazenadas com hash e atualização/exclusão de usuário restrita ao próprio cadastro autenticado.
 
 ### Health Checks
 
 - `GET /health`: verifica se a API está respondendo.
-- `GET /health/ready`: verifica o banco Oracle e o serviço externo.
-- `GET /metrics`: expõe métricas de requisições, duração e erros.
+- `GET /health/ready`: verifica a conectividade com o banco e a disponibilidade do serviço externo.
+- `GET /metrics`: expõe métricas Prometheus, incluindo duração de resposta e total de erros HTTP.
 
 O endpoint `/health/ready` retorna HTTP `200` quando as dependências estão saudáveis e HTTP `503` quando alguma dependência está indisponível.
 
-O serviço externo é configurado pela variável `Observability:ExternalServiceUrl`. Por padrão, o projeto utiliza `https://example.com`.
+O serviço externo é configurado pela variável `Observability__ExternalServiceUrl`.
 
 ### Logs e correlação
 
-Os logs são enviados para o console e para:
+Os logs estruturados são enviados para o console e para:
 
 ```text
 DOBU/Dobu.Api/logs/dobu-YYYYMMDD.log
 ```
 
-Cada requisição recebe um identificador de correlação. Se o cliente enviar `X-Correlation-ID`, o mesmo valor será devolvido na resposta e aparecerá nos logs.
+Cada requisição recebe um identificador de correlação. Se o cliente enviar `X-Correlation-ID`, o mesmo valor será devolvido na resposta e aparecerá nos logs da requisição.
 
 ### Testes automatizados
 
@@ -431,6 +434,8 @@ Os testes estão separados em:
 
 - `DOBU/tests/Dobu.UnitTests`: testes de domínio e aplicação.
 - `DOBU/tests/Dobu.IntegrationTests`: testes HTTP com a API executando em memória.
+
+Os testes de integração validam autenticação, endpoints de monitoramento, tratamento de erro e um fluxo completo do CRUD principal, criando e removendo usuários, pets, espécie, raça, consulta, agendamento, prontuário, vacina, pagamento, lembrete, DobuCam, análise e informação de cuidado.
 
 Os testes seguem o padrão AAA:
 
@@ -465,6 +470,8 @@ Crie um arquivo `.env` na raiz do projeto. Ele é local e não deve ser commitad
 ASPNETCORE_ENVIRONMENT=Development
 Database__Provider=Oracle
 ConnectionStrings__DobuOracle=User Id=SEU_USUARIO;Password=SUA_SENHA;Data Source=oracle.fiap.com.br:1521/orcl
+Jwt__Key=CHAVE_LOCAL_COM_PELO_MENOS_32_CARACTERES
+Observability__ExternalServiceUrl=https://servico-externo/health
 ```
 
 O arquivo `.env` já está incluído no `.gitignore`. Nunca publique usuário ou senha no README ou no repositório.
@@ -569,6 +576,30 @@ Fluxo recomendado:
 3. Envie o token nos endpoints protegidos usando `Authorization: Bearer <token>`.
 
 Perfis aceitos: `Responsavel` e `Veterinario`.
+
+Exemplo de cadastro de responsável:
+
+```json
+{
+  "nome": "Ana Responsavel",
+  "email": "ana.responsavel@dobu.com",
+  "senha": "Senha123",
+  "tipoUsuario": "Responsavel"
+}
+```
+
+Exemplo de cadastro de veterinário:
+
+```json
+{
+  "nome": "Dr Bruno",
+  "email": "bruno.vet@dobu.com",
+  "senha": "Senha123",
+  "tipoUsuario": "Veterinario"
+}
+```
+
+Os dois perfis conseguem autenticar via JWT e acessar endpoints protegidos. As regras de negócio continuam validando campos específicos: pets exigem `RESPONSAVEL`, enquanto consultas e agendamentos exigem `VETERINARIO`.
 
 
 ---

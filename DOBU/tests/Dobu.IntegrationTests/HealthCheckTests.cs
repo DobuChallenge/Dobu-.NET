@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using Xunit;
 
 namespace Dobu.IntegrationTests;
@@ -64,7 +65,28 @@ public class HealthCheckTests
         // Assert
         Assert.Contains("database", body);
         Assert.Contains("external-service", body);
-        Assert.Contains(response.StatusCode, new[] { HttpStatusCode.OK, HttpStatusCode.ServiceUnavailable });
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetSwagger_AutenticacaoJwtConfigurada_DocumentaBearer()
+    {
+        // Arrange
+
+        // Act
+        var response = await _client.GetAsync("/swagger/v1/swagger.json");
+        var body = await response.Content.ReadAsStringAsync();
+        using var document = JsonDocument.Parse(body);
+        var bearer = document.RootElement
+            .GetProperty("components")
+            .GetProperty("securitySchemes")
+            .GetProperty("Bearer");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("http", bearer.GetProperty("type").GetString());
+        Assert.Equal("bearer", bearer.GetProperty("scheme").GetString());
+        Assert.Equal("JWT", bearer.GetProperty("bearerFormat").GetString());
     }
 
     [Fact]

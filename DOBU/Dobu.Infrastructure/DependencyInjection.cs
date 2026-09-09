@@ -13,16 +13,24 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var provider = configuration["Database:Provider"] ?? "Sqlite";
-        var sqliteConn = configuration.GetConnectionString("DobuSqlite") ?? "Data Source=dobu.db";
         if (provider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
         {
+            var sqliteConn = configuration.GetConnectionString("DobuSqlite") ?? "Data Source=dobu.db";
             services.AddDbContext<DobuDbContext>(options =>
                 options.UseSqlite(sqliteConn));
         }
+        else if (provider.Equals("Oracle", StringComparison.OrdinalIgnoreCase))
+        {
+            var oracleConn = configuration.GetConnectionString("DobuOracle");
+            if (string.IsNullOrWhiteSpace(oracleConn))
+                throw new InvalidOperationException("Configure ConnectionStrings:DobuOracle nas configuracoes seguras do ambiente.");
+
+            services.AddDbContext<DobuDbContext>(options =>
+                options.UseOracle(oracleConn));
+        }
         else
         {
-            services.AddDbContext<DobuDbContext>(options =>
-                options.UseOracle(configuration.GetConnectionString("DobuOracle")));
+            throw new InvalidOperationException("Database:Provider deve ser Sqlite ou Oracle.");
         }
 
         services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();

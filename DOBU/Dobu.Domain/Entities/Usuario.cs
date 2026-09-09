@@ -37,7 +37,8 @@ public class Usuario : BaseEntity
         if (string.IsNullOrWhiteSpace(senha) || senha.Length < 6)
             throw new ArgumentException("Senha invalida");
 
-        if (!Enum.TryParse<TipoUsuario>(tipoUsuario, ignoreCase: true, out var tipoUsuarioValido))
+        if (!Enum.GetNames<TipoUsuario>().Any(x => x.Equals(tipoUsuario, StringComparison.OrdinalIgnoreCase)) ||
+            !Enum.TryParse<TipoUsuario>(tipoUsuario, ignoreCase: true, out var tipoUsuarioValido))
             throw new ArgumentException("Tipo de usuario invalido");
 
         Nome = nome;
