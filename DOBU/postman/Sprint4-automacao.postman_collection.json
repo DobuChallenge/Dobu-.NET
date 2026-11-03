@@ -1,192 +1,23 @@
 {
-  
-  "info": {
-    
-    "name": "DOBU - Sprint 4 - Automação QA",
-    
-    "description": "Quatro casos automatizados de sistema para a entrega de Compliance, Quality Assurance & Tests.",
-    
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    
-  },
-  
+  "info": {"name": "DOBU - Sprint 4 - Automação QA", "description": "Automação alinhada aos testes manuais da Sprint 4: vacina, alerta de próxima dose, reagendamento e lembrete.", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
   "variable": [
-    
-    { "key": "baseUrl", "value": "http://localhost:5070" },
-    
-    { "key": "email", "value": "qa-sprint4@dobu.com" },
-    
-    { "key": "senha", "value": "Senha123" },
-    
-    { "key": "token", "value": "" }
-    
+    {"key":"baseUrl","value":"http://localhost:5070"},{"key":"qaEmail","value":""},{"key":"qaVetEmail","value":""},{"key":"senha","value":"Senha123"},{"key":"token","value":""},{"key":"responsavelId","value":""},{"key":"veterinarioId","value":""},{"key":"especieId","value":""},{"key":"racaId","value":""},{"key":"petId","value":""},{"key":"vacinaId","value":""},{"key":"consultaId","value":""}
   ],
-  
-  "item": [
-    
-    {
-      
-      "name": "01 - Registrar usuário válido",
-      
-      "request": {
-        
-        "method": "POST",
-        
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        
-        "body": { "mode": "raw", "raw": "{\n  \"nome\": \"QA Sprint 4\",\n  \"email\": \"{{email}}\",\n  \"senha\": \"{{senha}}\",\n  \"tipoUsuario\": \"Responsavel\"\n}" },
-        
-        "url": "{{baseUrl}}/api/auth/register"
-        
-      },
-      
-      "event": [{ "listen": "test", "script": { "exec": [
-        
-        "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
-        
-        "pm.test('retorna token', () => pm.expect(pm.response.json().token).to.be.a('string').and.not.empty);",
-        
-        "pm.collectionVariables.set('token', pm.response.json().token);"
-        
-      ] } }]
-      
-    },
-    
-    {
-      
-      "name": "02 - Login com senha inválida",
-      
-      "request": {
-        
-        "method": "POST",
-        
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        
-        "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{email}}\",\n  \"senha\": \"SenhaErrada\"\n}" },
-        
-        "url": "{{baseUrl}}/api/auth/login"
-        
-      },
-      
-      "event": [{ "listen": "test", "script": { "exec": [
-        
-        "pm.test('HTTP 401', () => pm.response.to.have.status(401));"
-        
-      ] } }]
-      
-    },
-    
-    {
-      
-      "name": "03 - Registro inválido",
-      
-      "request": {
-        
-        "method": "POST",
-        
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        
-        "body": { "mode": "raw", "raw": "{\n  \"nome\": \"A\",\n  \"email\": \"invalido\",\n  \"senha\": \"123\",\n  \"tipoUsuario\": \"Responsavel\"\n}" },
-        
-        "url": "{{baseUrl}}/api/auth/register"
-        
-      },
-      
-      "event": [{ "listen": "test", "script": { "exec": [
-        
-        "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
-        
-      ] } }]
-      
-    },
-    
-    {
-      
-      "name": "04 - Endpoint protegido após autenticação",
-      
-      "request": {
-        
-        "method": "GET",
-        
-        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-        
-        "url": "{{baseUrl}}/api/pets"
-        
-      },
-      
-      "event": [{ "listen": "test", "script": { "exec": [
-        
-        "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
-        
-        "pm.test('resposta é lista JSON', () => pm.expect(pm.response.json()).to.be.an('array'));"
-        
-      ] } }]
-      
-    }
-    
+  "event":[{"listen":"prerequest","script":{"exec":["if (!pm.collectionVariables.get('qaEmail')) pm.collectionVariables.set('qaEmail','qa-'+Date.now()+'@dobu.com');","if (!pm.collectionVariables.get('qaVetEmail')) pm.collectionVariables.set('qaVetEmail','qa-vet-'+Date.now()+'@dobu.com');"]}}],
+  "item":[
+    {"name":"00 - Preparação controlada","item":[
+      {"name":"Cadastrar responsável","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"nome\":\"Tutor QA\",\"email\":\"{{qaEmail}}\",\"senha\":\"{{senha}}\",\"tipoUsuario\":\"Responsavel\"}"},"url":"{{baseUrl}}/api/auth/register"},"event":[{"listen":"test","script":{"exec":["pm.test('Responsável criado',()=>pm.response.to.have.status(200));","const j=pm.response.json();pm.collectionVariables.set('responsavelId',j.usuarioId);pm.collectionVariables.set('token',j.token);"]}}]},
+      {"name":"Cadastrar veterinário","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"nome\":\"Veterinario QA\",\"email\":\"{{qaVetEmail}}\",\"senha\":\"{{senha}}\",\"tipoUsuario\":\"Veterinario\"}"},"url":"{{baseUrl}}/api/auth/register"},"event":[{"listen":"test","script":{"exec":["pm.test('Veterinário criado',()=>pm.response.to.have.status(200));","pm.collectionVariables.set('veterinarioId',pm.response.json().usuarioId);"]}}]},
+      {"name":"Criar espécie","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"nome\":\"Cachorro QA\",\"descricao\":\"Animal domestico\"}"},"url":"{{baseUrl}}/api/especies"},"event":[{"listen":"test","script":{"exec":["pm.test('Espécie criada',()=>pm.response.to.have.status(201));pm.collectionVariables.set('especieId',pm.response.json().id);"]}}]},
+      {"name":"Criar raça","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"nome\":\"Vira-lata QA\",\"porte\":\"Medio\",\"expectativaVida\":12,\"descricao\":\"Raca de teste\",\"cuidados\":\"Banho e passeio\",\"especieId\":\"{{especieId}}\"}"},"url":"{{baseUrl}}/api/racas"},"event":[{"listen":"test","script":{"exec":["pm.test('Raça criada',()=>pm.response.to.have.status(201));pm.collectionVariables.set('racaId',pm.response.json().id);"]}}]},
+      {"name":"Criar pet Thor","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"nome\":\"Thor\",\"idade\":4,\"racaId\":\"{{racaId}}\",\"responsavelId\":\"{{responsavelId}}\"}"},"url":"{{baseUrl}}/api/pets"},"event":[{"listen":"test","script":{"exec":["pm.test('Pet criado',()=>pm.response.to.have.status(201));pm.collectionVariables.set('petId',pm.response.json().id);"]}}]}
+    ]},
+    {"name":"01 - Cadastro de vacina V10","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"nome\":\"V10\",\"dataAplicacao\":\"2026-10-19T10:00:00Z\",\"dataProximaDose\":\"2026-10-25T10:00:00Z\",\"petId\":\"{{petId}}\"}"},"url":"{{baseUrl}}/api/vacinas"},"event":[{"listen":"test","script":{"exec":["pm.test('Vacina criada HTTP 201',()=>pm.response.to.have.status(201));pm.test('nome V10',()=>pm.expect(pm.response.json().nome).to.eql('V10'));pm.collectionVariables.set('vacinaId',pm.response.json().id);"]}}]},
+    {"name":"02 - Alerta de próxima dose","request":{"method":"GET","url":"{{baseUrl}}/api/vacinas/proxima-dose?ate=2026-10-30T23:59:59Z"},"event":[{"listen":"test","script":{"exec":["pm.test('Alertas HTTP 200',()=>pm.response.to.have.status(200));pm.test('V10 aparece na janela',()=>pm.expect(pm.response.json().some(x=>x.id===pm.collectionVariables.get('vacinaId'))).to.eql(true));"]}}]},
+    {"name":"03 - Reagendamento da consulta","item":[
+      {"name":"Criar consulta C-100","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"dataConsulta\":\"2026-10-22T14:00:00Z\",\"descricao\":\"C-100 consulta anual\",\"valor\":150,\"petId\":\"{{petId}}\",\"veterinarioId\":\"{{veterinarioId}}\"}"},"url":"{{baseUrl}}/api/consultas"},"event":[{"listen":"test","script":{"exec":["pm.test('Consulta criada',()=>pm.response.to.have.status(201));pm.collectionVariables.set('consultaId',pm.response.json().id);"]}}]},
+      {"name":"Atualizar para 2026-10-24 10:00","request":{"method":"PUT","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"dataConsulta\":\"2026-10-24T10:00:00Z\",\"descricao\":\"C-100 reagendada\",\"valor\":150,\"petId\":\"{{petId}}\",\"veterinarioId\":\"{{veterinarioId}}\"}"},"url":"{{baseUrl}}/api/consultas/{{consultaId}}"},"event":[{"listen":"test","script":{"exec":["pm.test('Reagendamento HTTP 200',()=>pm.response.to.have.status(200));pm.test('data atualizada',()=>pm.expect(pm.response.json().dataConsulta).to.include('2026-10-24'))"]}}]}
+    ]},
+    {"name":"04 - Lembrete de cuidado","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"descricao\":\"Lembrete controlado QA\",\"dataLembrete\":\"2026-10-21T14:00:00Z\",\"status\":\"PENDENTE\",\"petId\":\"{{petId}}\"}"},"url":"{{baseUrl}}/api/lembretes"},"event":[{"listen":"test","script":{"exec":["pm.test('Lembrete criado HTTP 201',()=>pm.response.to.have.status(201));pm.test('status PENDENTE',()=>pm.expect(pm.response.json().status).to.eql('PENDENTE'))"]}}]}
   ]
-  
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
